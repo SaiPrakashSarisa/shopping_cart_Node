@@ -13,5 +13,6 @@ auth.get("/addresses", validator.validate, authContoller.getAddresses);
 auth.post("/deleteaddress", validator.validate, authContoller.deleteAddress);
 auth.post("/placeorder", validator.validate, authContoller.orderItems);
 auth.post("/updateCustomer", validator.validate, authContoller.updateCutomer);
+auth.get("/orders", validator.validate, authContoller.orders);
 
 module.exports = auth;

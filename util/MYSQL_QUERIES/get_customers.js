@@ -133,3 +133,19 @@ exports.deleteAddress = (address_id) => {
     );
   });
 };
+
+exports.orders = (cust_id) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "SELECT * FROM orders WHERE cust_Id =? ",
+      [cust_id],
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+  });
+};

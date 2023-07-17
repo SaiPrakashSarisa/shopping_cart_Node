@@ -239,3 +239,9 @@ exports.orderItems = [
     });
   },
 ];
+
+exports.orders = async (req, res) => {
+  const cust_id = req.cust_id;
+  const result = await customers.orders(cust_id);
+  res.status(200).json(result);
+};
