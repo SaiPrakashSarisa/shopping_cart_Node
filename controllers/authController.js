@@ -126,14 +126,28 @@ exports.login = [
 ];
 // fetch customers data
 exports.getCustomers = async (req, res) => {
+  const cust_Id = req.cust_id;
   try {
-    const customersData = await customers.getCustomers();
-    console.log("customers are : ", customersData);
-    res.status(200).send(customersData);
+    const customersData = await customers.getCustomers(cust_Id);
+    // console.log("customers are : ", customersData[0]);
+    res.status(200).send(customersData[0]);
   } catch (error) {
     console.error("Error", error);
   }
 };
+
+exports.updateCutomer = [
+  bodyParser.json(),
+  async (req, res) => {
+    const cust_id = req.cust_id;
+    console.log(cust_id, " is customer id");
+    console.log(req.body, " is customer data");
+    let customer = req.body;
+    const result = await customers.updateCustomer(customer, cust_id);
+    console.log("result ", result);
+    res.status(200).json(req.body);
+  },
+];
 
 exports.addAddress = [
   bodyParser.json(),
