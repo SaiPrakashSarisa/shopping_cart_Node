@@ -31,6 +31,55 @@ exports.signup = [
   },
 ];
 
+exports.refreshToken = [
+  bodyParser.json(),
+  bodyParser.urlencoded({ extended: true }),
+  (req, res) => {
+    const refreshToken = req.body.refreshToken;
+    const refreshKey = process.env.REFRESH_TOKEN_SECRET;
+    const accessKey = process.env.ACCESS_TOKEN_SECRET;
+
+    console.log("refreshToken : ", refreshToken);
+    console.log("refreshKey : ", refreshKey);
+    console.log("req.body :", req.body);
+
+    jwt.verify(refreshToken, refreshKey, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "invalid refresh token" });
+      }
+
+      console.log("decoded ", decoded);
+
+      const accessToken = jwt.sign(
+        {
+          cust_Id: decoded.cust_Id,
+          custName: decoded.custName,
+          email: decoded.email,
+          phone: decoded.phone,
+        },
+        accessKey,
+        { expiresIn: "30min" }
+      );
+
+      const newRefreshToken = jwt.sign(
+        {
+          cust_Id: decoded.cust_Id,
+          custName: decoded.custName,
+          email: decoded.email,
+          phone: decoded.phone,
+        },
+        refreshKey,
+        { expiresIn: "5hr" }
+      );
+
+      return res.status(200).json({
+        accessToken: accessToken,
+        refreshToken: newRefreshToken,
+      });
+    });
+  },
+];
+
 // login user
 exports.login = [
   bodyParser.urlencoded({ extended: true }),
@@ -62,12 +111,12 @@ exports.login = [
 
         //CREATING REFRESH_TOKEN
         const refreshToken = jwt.sign(payload, refresh_token_key, {
-          expiresIn: "2hr",
+          expiresIn: "5hr",
         });
         res.status(200).json({
           accessToken,
           refreshToken,
-          expiresIn: "30min",
+          expiresIn: "5sec",
         });
       }
     } catch (error) {

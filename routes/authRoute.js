@@ -7,6 +7,7 @@ const validator = require("../util/JsonWEBTokenValidator/validator");
 auth.post("/signUp", authContoller.signup);
 auth.get("/customers", validator.validate, authContoller.getCustomers);
 auth.post("/login", authContoller.login);
+auth.post("/refresh", authContoller.refreshToken);
 auth.post("/addaddress", validator.validate, authContoller.addAddress);
 auth.get("/addresses", validator.validate, authContoller.getAddresses);
 auth.post("/deleteaddress", validator.validate, authContoller.deleteAddress);
