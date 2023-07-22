@@ -27,6 +27,7 @@ exports.signup = [
       res.status(200).json(result);
     } catch (err) {
       console.error("Error", err);
+      res.status(409).json({ message: "user already exists" });
     }
   },
 ];
