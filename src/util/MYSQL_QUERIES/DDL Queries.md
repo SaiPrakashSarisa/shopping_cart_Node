@@ -46,13 +46,14 @@ CREATE TABLE `products` (
   `product_quantity` int NOT NULL,
   `product_description_id` varchar(255) NOT NULL,
   `product_category_id` varchar(255) NOT NULL,
-  `supplier_id` varchar(255) NOT NULL,
+  `retailer_id` varchar(255) NOT NULL,
   PRIMARY KEY (`product_id`),
   KEY `product_description_id` (`product_description_id`),
   KEY `product_category_id` (`product_category_id`),
   CONSTRAINT `products_ibfk_1` FOREIGN KEY (`product_description_id`) REFERENCES `product_description` (`description_id`),
-  CONSTRAINT `products_ibfk_2` FOREIGN KEY (`product_category_id`) REFERENCES `product_category` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  CONSTRAINT `products_ibfk_2` FOREIGN KEY (`product_category_id`) REFERENCES `product_category` (`category_id`),
+  CONSTRAINT `products_ibfk_3` FOREIGN KEY (`retailer_id`) REFERENCES `retailers` (`retailer_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 ```
 
 ### product_description table
@@ -118,4 +119,18 @@ CREATE TABLE `orders` (
   KEY `cust_Id` (`cust_Id`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`cust_Id`) REFERENCES `customers` (`cust_Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+```
+
+### retailers table
+
+```sql
+CREATE TABLE `retailers` (
+	`retailer_id` varchar(255) PRIMARY KEY,
+    `name` varchar(255) NOT NULL,
+    `email` varchar(255) NOT NULL,
+    `phone` varchar(255) NOT NULL,
+    `password varchar(255) NOT NULL,
+    UNIQUE KEY `email_unique` (`email`),
+    UNIQUE KEY `phone_unique` (`phone`)
+);
 ```
