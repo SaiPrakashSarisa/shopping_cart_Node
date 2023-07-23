@@ -1,17 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-
-const authRouter = require("./routes/authRoute");
-const productRouter = require("./routes/productsRoute");
-const cartRouter = require("./routes/cartRoutes");
+const router = express.Router();
 
 const app = express();
 
 app.use(cors());
 
-app.use("/", authRouter);
-app.use("/", productRouter);
-app.use("/", cartRouter);
+require("./src/routes/routes")(app, router);
 
 app.listen(1999, () => {
   console.log("server is running on port : 1999............");

@@ -60,6 +60,30 @@ exports.updateCustomer = (customer, cust_id) => {
   });
 };
 
+exports.updateAddress = (address) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "UPDATE address SET house_number =?, street=?, city=?, state=?, country=?, postal_code=?, WHERE address_Id= ?",
+      [
+        address.house_number,
+        address.street,
+        address.city,
+        address.state,
+        address.country,
+        address.postal_code,
+        address.address_Id,
+      ],
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+  });
+};
+
 exports.findloggedUser = (emailORphone, password) => {
   return new Promise((resolve, reject) => {
     connection.query(

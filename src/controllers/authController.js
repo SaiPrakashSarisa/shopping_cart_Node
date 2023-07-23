@@ -14,20 +14,27 @@ exports.signup = [
   async (req, res) => {
     console.log("Inside sign up controller");
 
-    const { userName, email, phone, password } = req.body;
+    const { userName, email, phone, password, retailer } = req.body;
 
-    console.log({ userName, email, phone, password });
+    console.log({ userName, email, phone, password, retailer });
     try {
       const result = await register.registerUser(
         userName,
         email,
         phone,
-        password
+        password,
+        retailer
       );
       res.status(200).json(result);
     } catch (err) {
-      console.error("Error", err);
-      res.status(409).json({ message: "user already exists" });
+      console.log("error", err);
+      console.error("Error", err.sqlMessage);
+      let message = err.sqlMessage;
+      if (message.includes("chk_phone")) {
+        res.status(409).json({ message: "enter valid phoneNo" });
+      } else if (message.includes("too long") && message.includes("phone")) {
+        res.status(409).json({ message: "ph no must contains only 10 digits" });
+      }
     }
   },
 ];
@@ -87,13 +94,13 @@ exports.login = [
   bodyParser.json(),
   async (req, res) => {
     // console.log(req.body);
-    const { emailORphone, password } = req.body;
+    const { emailORphone, password, retailer } = req.body;
 
     try {
       const loggedUser = await customers.findloggedUser(emailORphone, password);
       // console.log(loggedUser);
       if (loggedUser.length === 0) {
-        res.status(401).send("Invalid user!!!");
+        res.status(401).json({ message: "Invalid user!!!" });
       } else {
         const access_token_key = process.env.ACCESS_TOKEN_SECRET;
         const refresh_token_key = process.env.REFRESH_TOKEN_SECRET;
@@ -179,6 +186,17 @@ exports.getAddresses = async (req, res) => {
     message: "fetched all addresses",
   });
 };
+
+exports.updateAddress = [
+  bodyParser.json(),
+  async (req, res) => {
+    const address = req.body.address;
+    const result = await customers.updateAddress(address);
+    // clearing addresses from cache to update cache
+    myCache.del("addresses");
+    res.status(200).send(result);
+  },
+];
 
 exports.deleteAddress = [
   bodyParser.json(),

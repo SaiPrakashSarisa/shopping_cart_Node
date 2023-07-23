@@ -26,13 +26,18 @@ connection.connect((err) => {
   }
 });
 
-exports.registerUser = (userName, email, phone, password) => {
-  let id = idGenerator.generteCustomerId();
-  console.log({ id, userName, email, phone, password });
-
+exports.registerUser = (userName, email, phone, password, retailer) => {
+  let id = idGenerator.generteCustomerId(retailer);
+  let query;
+  console.log({ id, userName, email, phone, password, retailer });
+  if (retailer) {
+    query = "INSERT INTO retailers VALUES(?,?,?,?,?)";
+  } else {
+    query = "INSERT INTO customers VALUES(?,?,?,?,?)";
+  }
   return new Promise((resolve, reject) => {
     connection.query(
-      "INSERT INTO customers VALUES(?,?,?,?,?)",
+      query,
       [id, userName, email, phone, password],
       (err, result) => {
         if (err) {
