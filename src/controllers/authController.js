@@ -229,32 +229,10 @@ exports.orderItems = [
         );
       })
     );
-
-    // updating cart items
-    const result = await Promise.all(
-      products.map((product) => {
-        return prodQueries.reduceProductQuantity(
-          product.product_id,
-          product.product_quantity,
-          product.cart_item_quantity
-        );
-      })
-    );
-
-    // removing purchased cart items
-    const cartResults = await Promise.all(
-      products.map((product) => {
-        return prodQueries.removeOrderedItems(product.cart_item_id, cust_id);
-      })
-    );
-
     console.log(results, `order table status`);
-    console.log(result, "product quantity update status");
-    console.log(cartResults, "cart items removed status");
+
     res.status(200).json({
       orderResult: results,
-      productResult: result,
-      cartResult: cartResults,
     });
   },
 ];

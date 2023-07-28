@@ -23,7 +23,7 @@ module.exports = function (app, router) {
   // deleteCartItems
   app.route("/deletCartItems").post(validate, cartController.deleteCartItems);
   // addresses API
-  app.route("/addresses").post(validate, authController.getAddresses);
+  app.route("/addresses").get(validate, authController.getAddresses);
   // addaddress API
   app.route("/addaddress").post(validate, authController.addAddress);
   // deleteaddress API
